@@ -13,7 +13,7 @@ ChatGPTで複数行を入力のためにEnterを押すと入力途中なのに�
 ## 使い方
 
 - ChatGPTでEnterキーを押すと改行されます
-- メッセージを送信したい場合は、Ctrl+Enter、Command+Enterもｓくは送信ボタン
+- メッセージを送信したい場合は、Ctrl+Enter、Command+Enterもしくは送信ボタン
 - Shift+Enterでも改行できます（デフォルト動作）
 
 ## コード修正後の再読み込み方法
