@@ -3,11 +3,6 @@
 ChatGPTのWebUIでEnter押しても送信されず、改行だけするChrome拡張機能です。
 ChatGPTで複数行を入力のためにEnterを押すと入力途中なのに回答を始めるのを抑制します。Submit目的でEnterを入力したいときはCtrl+EnterもしくはCommand+Enter。
 
-
-## モチベーション
-
-
-
 ## インストール方法
 
 1. Chrome拡張機能の管理ページを開く（chrome://extensions/）
