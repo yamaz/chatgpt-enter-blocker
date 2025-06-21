@@ -1,6 +1,34 @@
 (function() {
   'use strict';
 
+  function insertNewline(activeElement) {
+    if (activeElement.tagName === 'TEXTAREA') {
+      const start = activeElement.selectionStart;
+      const end = activeElement.selectionEnd;
+      const value = activeElement.value;
+      activeElement.value = value.substring(0, start) + '\n' + value.substring(end);
+      activeElement.selectionStart = activeElement.selectionEnd = start + 1;
+      
+      const inputEvent = new Event('input', { bubbles: true });
+      activeElement.dispatchEvent(inputEvent);
+    } else {
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      
+      const br = document.createElement('br');
+      range.deleteContents();
+      range.insertNode(br);
+      
+      range.setStartAfter(br);
+      range.setEndAfter(br);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      
+      const inputEvent = new Event('input', { bubbles: true });
+      activeElement.dispatchEvent(inputEvent);
+    }
+  }
+
   function handleEnterKey(event) {
     if (event.key === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
       const activeElement = document.activeElement;
@@ -9,7 +37,7 @@
           (activeElement.getAttribute('contenteditable') === 'true'))) {
         
         // IME入力中は処理しない
-        if (event.isComposing || event.keyCode === 229) {
+        if (event.isComposing) {
           return;
         }
         
@@ -17,31 +45,8 @@
         event.stopPropagation();
         event.stopImmediatePropagation();
         
-        if (activeElement.tagName === 'TEXTAREA') {
-          const start = activeElement.selectionStart;
-          const end = activeElement.selectionEnd;
-          const value = activeElement.value;
-          activeElement.value = value.substring(0, start) + '\n' + value.substring(end);
-          activeElement.selectionStart = activeElement.selectionEnd = start + 1;
-          
-          const inputEvent = new Event('input', { bubbles: true });
-          activeElement.dispatchEvent(inputEvent);
-        } else {
-          const selection = window.getSelection();
-          const range = selection.getRangeAt(0);
-          
-          const br = document.createElement('br');
-          range.deleteContents();
-          range.insertNode(br);
-          
-          range.setStartAfter(br);
-          range.setEndAfter(br);
-          selection.removeAllRanges();
-          selection.addRange(range);
-          
-          const inputEvent = new Event('input', { bubbles: true });
-          activeElement.dispatchEvent(inputEvent);
-        }
+        // keyCode 229の場合でも改行を実行
+        insertNewline(activeElement);
         
         return false;
       }
@@ -56,7 +61,7 @@
         if (activeElement && (activeElement.tagName === 'TEXTAREA' || 
             (activeElement.getAttribute('contenteditable') === 'true'))) {
           // IME入力中は処理しない
-          if (event.isComposing || event.keyCode === 229) {
+          if (event.isComposing) {
             return;
           }
           event.preventDefault();
